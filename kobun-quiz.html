@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>古文単語テスト対策</title>
+<style>
+  :root {
+    --bg: #f7f5f2;
+    --surface: #ffffff;
+    --text: #222222;
+    --muted: #6b6b6b;
+    --accent: #6a4f9c;
+    --accent-soft: #e9e2f4;
+    --border: #e3ddd6;
+    --correct: #2f7a4f;
+    --correct-soft: #dff0e4;
+    --wrong: #b0472c;
+    --wrong-soft: #f6ded7;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1a18;
+      --surface: #262320;
+      --text: #ece7e1;
+      --muted: #a39c93;
+      --accent: #b79ce8;
+      --accent-soft: #362c47;
+      --border: #3a342f;
+      --correct: #7bc99a;
+      --correct-soft: #223a2c;
+      --wrong: #e08a6d;
+      --wrong-soft: #402a24;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1a18;
+    --surface: #262320;
+    --text: #ece7e1;
+    --muted: #a39c93;
+    --accent: #b79ce8;
+    --accent-soft: #362c47;
+    --border: #3a342f;
+    --correct: #7bc99a;
+    --correct-soft: #223a2c;
+    --wrong: #e08a6d;
+    --wrong-soft: #402a24;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 560px; padding: 20px 16px 40px; }
+  h1 { font-size: 1.3rem; margin: 4px 0 4px; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 18px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+  fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin: 0 0 12px; }
+  legend { font-size: 0.85rem; color: var(--muted); padding: 0 4px; }
+  .unit-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .unit-opt:last-child { border-bottom: none; }
+  .unit-opt .count { margin-left: auto; color: var(--muted); font-size: 0.8rem; }
+  .quick-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .quick-row button {
+    flex: 1;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button { appearance: none; border: none; border-radius: 10px; font-family: inherit; cursor: pointer; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    width: 100%;
+    padding: 13px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    width: 100%;
+    padding: 11px;
+    font-size: 0.9rem;
+    margin-top: 8px;
+  }
+  .hidden { display: none !important; }
+  .progress { font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .unit-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .question {
+    font-size: 2rem;
+    text-align: center;
+    padding: 20px 8px 24px;
+    letter-spacing: 0.02em;
+    word-break: break-word;
+    font-weight: 700;
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    text-align: left;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .choice-btn:active { opacity: 0.8; }
+  .choice-btn.correct { background: var(--correct-soft); border-color: var(--correct); color: var(--correct); font-weight: 700; }
+  .choice-btn.wrong { background: var(--wrong-soft); border-color: var(--wrong); color: var(--wrong); font-weight: 700; }
+  .choice-btn:disabled { cursor: default; }
+  .result-score { font-size: 2.2rem; text-align: center; margin: 6px 0 2px; }
+  .result-label { text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .missed-list { font-size: 0.9rem; }
+  .missed-item { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .missed-item:last-child { border-bottom: none; }
+  .missed-item .word { font-weight: 700; }
+  .missed-item .correct-ans { color: var(--correct); }
+  .missed-item .user-ans { color: var(--wrong); }
+  .missed-item .row2 { font-size: 0.85rem; margin-top: 2px; color: var(--muted); }
+  .footer-note { font-size: 0.75rem; color: var(--muted); text-align: center; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>古文単語テスト対策</h1>
+  <div class="sub">単元を選んでスタート(4択形式)</div>
+
+  <!-- 設定画面 -->
+  <div id="setup" class="card">
+    <label>出題する単元を選択</label>
+    <fieldset>
+      <legend>単元</legend>
+      <div class="quick-row">
+        <button type="button" id="selectAllBtn">全て選択</button>
+        <button type="button" id="selectNoneBtn">全て解除</button>
+      </div>
+      <div id="unitList"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>出題順</legend>
+      <label class="unit-opt"><input type="radio" name="order" value="shuffle" checked style="width:auto;"> シャッフル</label>
+      <label class="unit-opt"><input type="radio" name="order" value="inorder" style="width:auto;"> 単元・リスト順</label>
+    </fieldset>
+
+    <button class="btn-primary" id="startBtn">テストを開始</button>
+    <div class="footer-note" id="totalWordsNote"></div>
+  </div>
+
+  <!-- 出題画面 -->
+  <div id="quiz" class="card hidden">
+    <div class="progress">
+      <span id="progressText">1 / 10</span>
+      <span id="scoreText">正解 0</span>
+    </div>
+    <div style="text-align:center;"><span class="unit-tag" id="unitTag">第1回</span></div>
+    <div class="question" id="questionText">いとほし</div>
+    <div class="choices" id="choicesWrap"></div>
+    <button class="btn-ghost hidden" id="nextBtn">次の問題へ</button>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="result" class="card hidden">
+    <div class="result-score" id="resultScore">8 / 10</div>
+    <div class="result-label">正解率</div>
+    <div id="missedWrap">
+      <label>間違えた単語</label>
+      <div class="missed-list" id="missedList"></div>
+    </div>
+    <button class="btn-primary" id="retryBtn">同じ範囲でもう一度</button>
+    <button class="btn-ghost" id="backBtn">単元選択に戻る</button>
+  </div>
+
+  <div class="footer-note">単語データはこのページのコード内(UNITS)に直接記入しています</div>
+</div>
+
+<script>
+(function () {
+/* ============================================================
+   ▼▼▼ ここに単語データを直接書いてください ▼▼▼
+   ------------------------------------------------------------
+   ・UNITS は「単元(回)」の配列です。名前は自由に変更OK。
+   ・各単元の words は { w: "古文単語", m: "現代語訳(意味)" } の配列。
+   ・意味を「・」区切りで複数書くと、4択の正解表示にはすべて表示され、
+     判定は選択肢の完全一致で行われます(自由記述ではなく4択なので
+     表記ゆれは気にせず、一番代表的な訳を1つ m に書けばOKです)。
+   ・単元はいくつ追加してもOK。コピペして増やしてください。
+   ============================================================ */
+  const UNITS = [
+    {
+      name: "第1回",
+      words: [
+        { w: "いとほし", m: "かわいそうだ・かわいい" },
+        { w: "つとめて", m: "早朝" },
+        { w: "あからさまなり", m: "ちょっとした・急だ" },
+        { w: "うつくし", m: "かわいらしい" },
+        { w: "をかし", m: "趣がある・かわいい" },
+        { w: "ののしる", m: "大声で騒ぐ" },
+        { w: "ゆかし", m: "心ひかれる・知りたい" },
+        { w: "あさまし", m: "驚きあきれる" },
+      ],
+    },
+    {
+      name: "第2回",
+      words: [
+        { w: "すさまじ", m: "興ざめだ" },
+        { w: "つきづきし", m: "似つかわしい" },
+        { w: "らうたし", m: "かわいらしい" },
+        { w: "こころもとなし", m: "待ち遠しい・じれったい" },
+        { w: "なめし", m: "無礼だ" },
+        { w: "けしからず", m: "異様だ・よくない" },
+        { w: "いみじ", m: "はなはだしい・すばらしい" },
+        { w: "わりなし", m: "道理に合わない・どうしようもない" },
+      ],
+    },
+  ];
+/* ▲▲▲ ここまでが編集エリア ▲▲▲ ================================ */
+
+  const setupEl = document.getElementById('setup');
+  const quizEl = document.getElementById('quiz');
+  const resultEl = document.getElementById('result');
+
+  const unitListEl = document.getElementById('unitList');
+  const selectAllBtn = document.getElementById('selectAllBtn');
+  const selectNoneBtn = document.getElementById('selectNoneBtn');
+  const startBtn = document.getElementById('startBtn');
+  const totalWordsNote = document.getElementById('totalWordsNote');
+
+  const progressText = document.getElementById('progressText');
+  const scoreText = document.getElementById('scoreText');
+  const unitTag = document.getElementById('unitTag');
+  const questionText = document.getElementById('questionText');
+  const choicesWrap = document.getElementById('choicesWrap');
+  const nextBtn = document.getElementById('nextBtn');
+
+  const resultScore = document.getElementById('resultScore');
+  const missedList = document.getElementById('missedList');
+  const retryBtn = document.getElementById('retryBtn');
+  const backBtn = document.getElementById('backBtn');
+
+  let queue = [];
+  let idx = 0;
+  let correctCount = 0;
+  let missed = [];
+  let lastOrder = 'shuffle';
+  let answered = false;
+
+  function renderUnitList() {
+    unitListEl.innerHTML = UNITS.map((u, i) => {
+      return '<label class="unit-opt"><input type="checkbox" class="unit-check" data-idx="' + i +
+        '" checked style="width:auto;"> ' + u.name +
+        '<span class="count">' + u.words.length + '語</span></label>';
+    }).join('');
+    updateTotalNote();
+    unitListEl.querySelectorAll('.unit-check').forEach(cb => {
+      cb.addEventListener('change', updateTotalNote);
+    });
+  }
+
+  function getSelectedUnits() {
+    const checks = Array.from(unitListEl.querySelectorAll('.unit-check'));
+    return checks.filter(c => c.checked).map(c => UNITS[parseInt(c.dataset.idx, 10)]);
+  }
+
+  function updateTotalNote() {
+    const sel = getSelectedUnits();
+    const total = sel.reduce((sum, u) => sum + u.words.length, 0);
+    totalWordsNote.textContent = sel.length + '単元・計' + total + '語を選択中';
+  }
+
+  selectAllBtn.addEventListener('click', () => {
+    unitListEl.querySelectorAll('.unit-check').forEach(c => c.checked = true);
+    updateTotalNote();
+  });
+  selectNoneBtn.addEventListener('click', () => {
+    unitListEl.querySelectorAll('.unit-check').forEach(c => c.checked = false);
+    updateTotalNote();
+  });
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function allWordsPool() {
+    let pool = [];
+    UNITS.forEach(u => u.words.forEach(w => pool.push({ ...w, unit: u.name })));
+    return pool;
+  }
+
+  function buildChoices(correctItem, pool) {
+    const distractorPool = pool.filter(w => w.m !== correctItem.m);
+    const shuffledDistractors = shuffle(distractorPool).slice(0, 3);
+    const options = shuffle([correctItem, ...shuffledDistractors]);
+    return options.map(o => o.m);
+  }
+
+  startBtn.addEventListener('click', () => {
+    const selUnits = getSelectedUnits();
+    let words = [];
+    selUnits.forEach(u => u.words.forEach(w => words.push({ ...w, unit: u.name })));
+    if (words.length < 4) {
+      alert('4択を作るために、選択した単元の合計単語数が4語以上になるようにしてください。');
+      return;
+    }
+    lastOrder = document.querySelector('input[name="order"]:checked').value;
+    const pool = allWordsPool();
+    let base = lastOrder === 'shuffle' ? shuffle(words) : words;
+    queue = base.map(item => ({
+      item,
+      choices: buildChoices(item, pool.length >= 4 ? pool : words),
+    }));
+    idx = 0;
+    correctCount = 0;
+    missed = [];
+    showQuiz();
+  });
+
+  function showQuiz() {
+    setupEl.classList.add('hidden');
+    resultEl.classList.add('hidden');
+    quizEl.classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    answered = false;
+    const q = queue[idx];
+    progressText.textContent = (idx + 1) + ' / ' + queue.length;
+    scoreText.textContent = '正解 ' + correctCount;
+    unitTag.textContent = q.item.unit;
+    questionText.textContent = q.item.w;
+    nextBtn.classList.add('hidden');
+
+    choicesWrap.innerHTML = '';
+    q.choices.forEach(choiceText => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = choiceText;
+      btn.addEventListener('click', () => selectChoice(btn, choiceText));
+      choicesWrap.appendChild(btn);
+    });
+  }
+
+  function selectChoice(btn, choiceText) {
+    if (answered) return;
+    answered = true;
+    const q = queue[idx];
+    const isCorrect = choiceText === q.item.m;
+
+    Array.from(choicesWrap.children).forEach(b => {
+      b.disabled = true;
+      if (b.textContent === q.item.m) b.classList.add('correct');
+      else if (b === btn && !isCorrect) b.classList.add('wrong');
+    });
+
+    if (isCorrect) {
+      correctCount++;
+    } else {
+      missed.push({ w: q.item.w, correctM: q.item.m, userM: choiceText, unit: q.item.unit });
+    }
+    scoreText.textContent = '正解 ' + correctCount;
+    nextBtn.classList.remove('hidden');
+  }
+
+  nextBtn.addEventListener('click', () => {
+    idx++;
+    if (idx >= queue.length) {
+      showResult();
+    } else {
+      renderQuestion();
+    }
+  });
+
+  function showResult() {
+    quizEl.classList.add('hidden');
+    resultEl.classList.remove('hidden');
+    resultScore.textContent = correctCount + ' / ' + queue.length;
+
+    if (missed.length === 0) {
+      missedList.innerHTML = '<div class="missed-item">全問正解です!</div>';
+    } else {
+      missedList.innerHTML = missed.map(m => {
+        return '<div class="missed-item">' +
+          '<div class="word">' + m.w + '<span style="color:var(--muted);font-weight:400;"> (' + m.unit + ')</span></div>' +
+          '<div class="row2">正解: <span class="correct-ans">' + m.correctM + '</span></div>' +
+          '<div class="row2">選択: <span class="user-ans">' + m.userM + '</span></div>' +
+          '</div>';
+      }).join('');
+    }
+  }
+
+  retryBtn.addEventListener('click', () => {
+    const pool = allWordsPool();
+    const words = queue.map(q => q.item);
+    let base = lastOrder === 'shuffle' ? shuffle(words) : words;
+    queue = base.map(item => ({ item, choices: buildChoices(item, pool) }));
+    idx = 0;
+    correctCount = 0;
+    missed = [];
+    showQuiz();
+  });
+
+  backBtn.addEventListener('click', () => {
+    resultEl.classList.add('hidden');
+    setupEl.classList.remove('hidden');
+  });
+
+  renderUnitList();
+})();
+</script>
+</body>
+</html>
